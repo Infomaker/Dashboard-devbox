@@ -1,7 +1,7 @@
 version: "2.1"
 services:
   dashboard:
-    image: "registry.infomaker.io/dashboard-devbox:latest"
+    image: "infomakerscandinaviaab/dashboard-devbox:0.0.7-devbox"
     ports:
       - "5002:5002"
     depends_on:
