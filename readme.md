@@ -1,6 +1,10 @@
 __Run__
 
+To run this you will need a Dockerhub account with access to Dashboard-devbox images
+
+
 ```
+docker login
 docker-compose up
 ```
 

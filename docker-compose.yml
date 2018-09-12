@@ -1,7 +1,7 @@
 version: "2.1"
 services:
   dashboard:
-    image: "infomakerscandinaviaab/dashboard-devbox:0.0.7-devbox"
+    image: "infomakerscandinaviaab/dashboard-devbox:latest"
     ports:
       - "5002:5002"
     depends_on:
@@ -10,45 +10,8 @@ services:
     environment:
       - DB_PORT=5002
       - API_URL=http://localhost:8080
-      - ENV=local
-      - REAL_ENV=local
-
-      # AWS config
-      - AWS_REGION=eu-west-1
-      - AWS_ACCESS_KEY_ID=local
-      - AWS_SECRET_ACCESS_KEY=local
-      - AWS_S3_ENDPOINT=minio:9000
-      - AWS_DDB_ENDPOINT=dynamodb:8000
-
-      # Workspace's configs s3 bucket credentials
-      - WORKSPACES_ICONS_BUCKET_NAME=workspaces-icons-local
-      - WORKSPACES_ICONS_BUCKET_ACCESS_KEY_ID=dblocals3
-      - WORKSPACES_ICONS_SECRET_ACCESS_KEY=dblocals3
-
-      # Plugin's configs s3 bucket credentials
-      - PLUGINS_CONFIG_BUCKET_NAME=plugin-config-local
-      - PLUGINS_CONFIG_BUCKET_ACCESS_KEY_ID=dblocals3
-      - PLUGINS_CONFIG_SECRET_ACCESS_KEY=dblocals3
-
-      # Plugins s3 bucket credentials
-      - PLUGINS_BUCKET_NAME=plugins-dev
-      - PLUGINS_BUCKET_ACCESS_KEY_ID=xxx
-      - PLUGINS_BUCKET_SECRET_ACCESS_KEY=xxx
-
-      # DynamoDB Dashboard's tables names
-      - WORKSPACE_TABLE_NAME=dashboard-workspace
-      - STORAGE_TABLE_NAME=dashboard-storage
-      - PLUGIN_TABLE_NAME=dashboard-plugin
-      - PROFILE_TABLE_NAME=dashboard-profile
-
-      - AVAILABLE_PLUGINS_URL=https://s3-eu-west-1.amazonaws.com/plugins-dev/available.json
-
-      # Vars for IM.ID
-      - TRUST_PROXY=true
       - MASTER_SECRET=oh-so-secret
       - SERVICE_TOKEN_SIGN_SECRET=puzzles
-      - IM_LOG_NAME=dashboard
-      - IM_LOG_LEVEL=error
   dynamodb:
     image: "instructure/dynamo-local-admin"
     ports:
@@ -60,8 +23,8 @@ services:
     volumes:
       - ./s3:/export
     environment:
-      - "MINIO_ACCESS_KEY=dblocals3" # should be used for CONFIG_BUCKET_ACCESS_KEY_ID locally
-      - "MINIO_SECRET_KEY=dblocals3" # should be used for CONFIG_SECRET_ACCESS_KEY locally
+      - "MINIO_ACCESS_KEY=dblocals3"
+      - "MINIO_SECRET_KEY=dblocals3"
     command: server /export
   mock-imsg:
     image: infomakerscandinaviaab/imid_mock-imsg:0.0.2
@@ -102,9 +65,9 @@ services:
                     "dashboard:workspace/uploadIcon"
                 ],
                 "userinfo": {
-                    "given_name": "Pelle",
-                    "family_name": "Plutt",
-                    "email": "pelle.plutt@infomaker.io"
+                    "given_name": "Dashboard",
+                    "family_name": "User",
+                    "email": "dashboard-user@infomaker.io"
                 }
             }
         IM_LOG_NAME: mock-imsg
