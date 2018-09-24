@@ -50,6 +50,7 @@ services:
                     "dashboard:plugin/getByBundle",
                     "dashboard:plugin/install",
                     "dashboard:plugin/update",
+                    "dashboard:plugin/delete",
                     "dashboard:profile/create",
                     "dashboard:profile/delete",
                     "dashboard:proxy/exectue",
