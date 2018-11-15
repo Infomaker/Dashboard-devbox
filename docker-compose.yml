@@ -1,7 +1,7 @@
 version: "2.1"
 services:
   dashboard:
-    image: "infomakerscandinaviaab/dashboard-devbox:latest"
+    image: "infomakerscandinaviaab/dashboard-devbox:1.13.0-dev.1"
     ports:
       - "5002:5002"
     depends_on:
@@ -9,7 +9,8 @@ services:
         condition: service_started
     environment:
       - DB_PORT=5002
-      - API_URL=http://localhost:8080
+      - API_PORT=8080
+      - BASE_URL=localhost
       - MASTER_SECRET=oh-so-secret
       - SERVICE_TOKEN_SIGN_SECRET=puzzles
   dynamodb:
@@ -27,7 +28,7 @@ services:
       - "MINIO_SECRET_KEY=dblocals3"
     command: server /export
   mock-imsg:
-    image: infomakerscandinaviaab/imid_mock-imsg:0.0.2
+    image: infomakerscandinaviaab/imid_mock-imsg:0.1.0
     healthcheck:
         test: "curl --fail http://localhost:8080/imsg-service/v1/health || exit 1"
         interval: 2s
