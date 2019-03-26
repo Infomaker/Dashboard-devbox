@@ -1,7 +1,7 @@
 version: "2.1"
 services:
   dashboard:
-    image: "infomakerscandinaviaab/dashboard-devbox:1.13.0-dev.1"
+    image: "infomakerscandinaviaab/dashboard-devbox:1.14.0-devbox"
     ports:
       - "5002:5002"
     depends_on:
