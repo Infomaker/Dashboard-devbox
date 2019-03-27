@@ -1,7 +1,7 @@
 version: "2.1"
 services:
   dashboard:
-    image: "infomakerscandinaviaab/dashboard-devbox:1.13.0-dev.1"
+    image: "infomakerscandinaviaab/dashboard-devbox:1.14.0-devbox"
     ports:
       - "5002:5002"
     depends_on:
@@ -13,6 +13,8 @@ services:
       - BASE_URL=localhost
       - MASTER_SECRET=oh-so-secret
       - SERVICE_TOKEN_SIGN_SECRET=puzzles
+      - SESSION_POLL_INTERVAL=10000
+      - SESSION_POLL_ENDPOINT=/imsg-service/v1/token-is-set
   dynamodb:
     image: "instructure/dynamo-local-admin"
     ports:
@@ -28,50 +30,62 @@ services:
       - "MINIO_SECRET_KEY=dblocals3"
     command: server /export
   mock-imsg:
-    image: infomakerscandinaviaab/imid_mock-imsg:0.1.0
+    image: infomakerscandinaviaab/imid_mock-imsg:0.3.3
     healthcheck:
-        test: "curl --fail http://localhost:8080/imsg-service/v1/health || exit 1"
-        interval: 2s
-        timeout: 1s
-        retries: 20
+      test: "curl --fail http://localhost:8080/imsg-service/v1/health || exit 1"
+      interval: 2s
+      timeout: 1s
+      retries: 20
     ports:
-        - 8080:8080
+      - 8080:8080
     environment:
-        PORT: 8080
-        INTERNAL_SERVICE_URL: http://dashboard:5002
-        SERVICE_TOKEN_SIGN_SECRET: puzzles
-        SERVICE_TOKEN_PAYLOAD: |-
-            {
-                "org": "infomaker",
-                "sub": "infomaker_6c0ed3cf-1032-4c29-ba75-85e547722295",
-                "groups": [],
-                "permissions": [
-                    "dashboard:dashboard/load",
-                    "dashboard:plugin/getAvailable",
-                    "dashboard:plugin/getByBundle",
-                    "dashboard:plugin/install",
-                    "dashboard:plugin/update",
-                    "dashboard:plugin/delete",
-                    "dashboard:profile/create",
-                    "dashboard:profile/delete",
-                    "dashboard:proxy/exectue",
-                    "dashboard:storage/delete",
-                    "dashboard:storage/get",
-                    "dashboard:storage/save",
-                    "dashboard:user/me",
-                    "dashboard:workspace/create",
-                    "dashboard:workspace/delete",
-                    "dashboard:workspace/encryption",
-                    "dashboard:workspace/history",
-                    "dashboard:workspace/update",
-                    "dashboard:workspace/uploadIcon"
-                ],
-                "userinfo": {
-                    "given_name": "Dashboard",
-                    "family_name": "User",
-                    "email": "dashboard-user@infomaker.io"
-                }
+      PORT: 8080
+      INTERNAL_SERVICE_URL: http://dashboard:5002
+      SERVICE_TOKEN_SIGN_SECRET: puzzles
+      SERVICE_TOKEN_PAYLOAD: |-
+        {
+            "org": "infomaker",
+            "sub": "infomaker_6c0ed3cf-1032-4c29-ba75-85e547722295",
+            "groups": [],
+            "permissions": {
+              "org": ["dashboard:user/me"],
+              "units": {
+                "dashboard": [
+                  "dashboard:group/admin",
+                  "dashboard:group/powerUser",
+                  "dashboard:group/user",
+                  "dashboard:group/readOnly",
+                  "dashboard:dashboard/load",
+                  "dashboard:plugin/getAvailable",
+                  "dashboard:plugin/getByBundle",
+                  "dashboard:plugin/install",
+                  "dashboard:plugin/update",
+                  "dashboard:plugin/delete",
+                  "dashboard:profile/create",
+                  "dashboard:profile/delete",
+                  "dashboard:proxy/exectue",
+                  "dashboard:storage/delete",
+                  "dashboard:storage/get",
+                  "dashboard:storage/save",
+                  "dashboard:user/me",
+                  "dashboard:config-key/create",
+                  "dashboard:config-key/delete",
+                  "dashboard:config-key/update",
+                  "dashboard:workspace/create",
+                  "dashboard:workspace/delete",
+                  "dashboard:workspace/encryption",
+                  "dashboard:workspace/history",
+                  "dashboard:workspace/update",
+                  "dashboard:workspace/uploadIcon",
+                  "dashboard:workspace/updateProfiles"
+                ]
+              }
+            },
+            "userinfo": {
+                "given_name": "Dashboard",
+                "family_name": "User",
+                "email": "dashboard-user@infomaker.io"
             }
-        IM_LOG_NAME: mock-imsg
-        IM_LOG_LEVEL: debug
-      
+        }
+      IM_LOG_NAME: mock-imsg
+      IM_LOG_LEVEL: debug
