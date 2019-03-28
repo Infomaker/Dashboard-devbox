@@ -13,8 +13,6 @@ services:
       - BASE_URL=localhost
       - MASTER_SECRET=oh-so-secret
       - SERVICE_TOKEN_SIGN_SECRET=puzzles
-      - SESSION_POLL_INTERVAL=10000
-      - SESSION_POLL_ENDPOINT=/imsg-service/v1/token-is-set
   dynamodb:
     image: "instructure/dynamo-local-admin"
     ports:
