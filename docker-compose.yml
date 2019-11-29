@@ -14,6 +14,7 @@ services:
       - BASE_URL=localhost
       - MASTER_SECRET=oh-so-secret
       - SERVICE_TOKEN_SIGN_SECRET=puzzles
+      - PROXY_WHITELIST_DOMAINS=infomaker.io,navigacloud.com
 
   dynamodb:
     image: "instructure/dynamo-local-admin"
